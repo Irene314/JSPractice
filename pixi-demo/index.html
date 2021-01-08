@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixi.js</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.5.5/pixi.js"></script>
+    <style> * { padding : 0 ; margin : 0 } </style >
+</head>
+<body>
+    <script>
+        let type = "WebGL"
+        if(!PIXI.utils.isWebGLSupported()){
+          type = "canvas"
+        }
+        PIXI.utils.sayHello(type)
+
+        //Create a Pixi Application
+        let app = new PIXI.Application({
+            width: 256,         // default: 800
+            height: 256,        // default: 600
+            antialias: true,    // default: false，抗鋸齒
+            transparent: false, // default: false，透明
+            resolution: 1,      // default: 1，支援retina解析度
+            backgroundColor: 0x061639
+        });
+
+        app.renderer.autoResize = true;
+        app.renderer.resize(512, 512);
+
+        document.body.appendChild(app.view);  
+        //app.renderer.backgroundColor = 0x061639;
+
+        PIXI.loaders.shared.add(["cat.png","cat1.png","cat2.png"])
+        .on("progress", loadProgressHandler)
+        .load(setup);
+
+        function loadProgressHandler(loader, resource) {
+            console.log("loading: " + resource.url);
+            console.log("progress: " + loader.progress + "%");
+        }
+
+        function setup() {
+            console.log("setup");
+
+            let id = PIXI.loader.resources;
+            let cat = new PIXI.Sprite(id["cat.png"].texture);
+            let cat1 = new PIXI.Sprite(id["cat1.png"].texture);
+            let cat2 = new PIXI.Sprite(id["cat2.png"].texture);
+            
+            app.stage.addChild(cat);
+            app.stage.addChild(cat1);
+            app.stage.addChild(cat2);
+
+            cat1.x = 32;
+            cat1.y = 32;
+            cat2.x = 64;
+            cat2.y = 64;
+
+            window.addEventListener("click", ()=>{
+                //app.stage.removeChild(cat);
+                cat.visible = false;
+            })
+        }
+      </script>
+</body>
+</html>
